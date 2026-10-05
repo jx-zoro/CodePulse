@@ -1,12 +1,26 @@
-"use client";
+﻿"use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useHistoryStore } from "@/lib/store/useHistoryStore";
+import { useTestStore } from "@/lib/store/useTestStore";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 
 export default function HistoryPage() {
   const { tests, removeTest, clearHistory } = useHistoryStore();
+  const testStore = useTestStore();
+  const router = useRouter();
+
+  const handleView = (test: any) => {
+    testStore.setUrl(test.request.url);
+    testStore.setMethod(test.request.method);
+    testStore.setHeaders(test.request.headers || []);
+    if (test.request.body) testStore.setBody(test.request.body);
+    if (test.response) testStore.setResponse(test.response);
+    router.push("/test");
+  };
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -90,6 +104,9 @@ export default function HistoryPage() {
                       <td className="px-4 py-3 text-muted-foreground">{test.response?.metrics.totalTime} ms</td>
                       <td className="px-4 py-3 text-muted-foreground">{(test.response?.size ? test.response.size / 1024 : 0).toFixed(1)} KB</td>
                       <td className="px-4 py-3 text-right">
+                        <Button variant="ghost" size="sm" onClick={() => handleView(test)} className="text-primary hover:text-primary/80 mr-2">
+                          <Search className="h-4 w-4 mr-1" /> View
+                        </Button>
                         <Button variant="ghost" size="sm" onClick={() => removeTest(test.id)} className="text-muted-foreground hover:text-destructive">
                           Delete
                         </Button>
@@ -105,3 +122,4 @@ export default function HistoryPage() {
     </div>
   );
 }
+

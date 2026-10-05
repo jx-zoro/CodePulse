@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useCollectionsStore } from "@/lib/store/useCollectionsStore";
@@ -77,7 +77,7 @@ function CollectionCard({ collection }: { collection: Collection }) {
           <Button variant="ghost" size="sm" onClick={() => addFolder(collection.id, "root", "New Folder")}>
             <Plus className="h-4 w-4 mr-1" /> Folder
           </Button>
-          <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => removeCollection(collection.id)}>
+          <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={(e) => { e.stopPropagation(); if(confirm("Delete this collection?")) removeCollection(collection.id); }}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -114,7 +114,7 @@ function FolderTree({ collectionId, folder, depth }: { collectionId: string, fol
             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => addFolder(collectionId, folder.id, "New Subfolder")}>
               <Plus className="h-3 w-3" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => removeFolder(collectionId, folder.id)}>
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); if(confirm("Delete this folder?")) removeFolder(collectionId, folder.id); }}>
               <Trash2 className="h-3 w-3" />
             </Button>
           </div>
@@ -146,7 +146,7 @@ function FolderTree({ collectionId, folder, depth }: { collectionId: string, fol
               }}>
                 Open
               </Button>
-              <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => removeRequest(collectionId, folder.id, req.id!)}>
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); if(confirm("Delete this request?")) removeRequest(collectionId, folder.id, req.id!); }}>
                 <Trash2 className="h-3 w-3" />
               </Button>
             </div>
@@ -156,3 +156,4 @@ function FolderTree({ collectionId, folder, depth }: { collectionId: string, fol
     </div>
   );
 }
+

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Activity, Lock, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -30,7 +31,17 @@ export default function RegisterPage() {
         throw new Error(data.message || "Registration failed");
       }
 
-      router.push("/login?registered=true");
+      const signInRes = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (signInRes?.error) {
+        throw new Error("Registered successfully, but automatic login failed. Please sign in.");
+      } else {
+        window.location.href = "/dashboard";
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -119,4 +130,6 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+
 

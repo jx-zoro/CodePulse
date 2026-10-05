@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+﻿import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "./db";
 import bcrypt from "bcryptjs";
@@ -39,6 +39,9 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     session: ({ session, token }) => {
       if (token && session.user) {
@@ -49,3 +52,4 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET || "codepulse-secret-key-for-development-only",
 };
+

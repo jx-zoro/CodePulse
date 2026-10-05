@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/server/auth";
-import { OpenAICompatibleProvider } from "@/server/services/ai/OpenAIProvider";
+import { AIProviderFactory } from "@/server/services/ai/AIProviderFactory";
 import { AIRedactionService } from "@/server/services/ai/AIRedactionService";
 
 export async function POST(req: Request) {
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   try {
     const { prompt, context } = await req.json();
 
-    const provider = new OpenAICompatibleProvider();
+    const provider = AIProviderFactory.getProvider();
     if (!provider.isConfigured()) {
       return NextResponse.json({ message: "AI Provider is not configured." }, { status: 503 });
     }
@@ -59,6 +59,7 @@ ${JSON.stringify(redactedContext, null, 2)}`;
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
+
 
 
 
